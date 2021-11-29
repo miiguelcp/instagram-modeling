@@ -8,54 +8,50 @@ from eralchemy import render_er
 
 Base = declarative_base()
 
-##class Person(Base):
-  ##  __tablename__ = 'person'
-  ##  # Here we define columns for the table person
-  ##  # Notice that each column is also a normal Python instance attribute.
-  ##  id = Column(Integer, primary_key=True)
-  ##  name = Column(String(250), nullable=False)
-
-class Usuario(Base):
-    __tablename__ = 'usuario'
+class Followers(Base):
+    __tablename__ = 'followers'
     id = Column(Integer, primary_key=True)
-    name = Column(String(80), nullable=False)
-    last_name = Column(String(80), nullable=False)
-    email = Column(String(210), unique=True)
-    user_name = Column(String(80), unique=True)
-    favoritos = relationship('favorito', backref='usuario', uselist=True)
-    favorito_id = Column(Integer, ForeignKey('favorito.id'), nullable=False)
+    user_to = Column(Integer)
+    user_from = Column(Integer)
 
 
-class Favorito(Base):
-    __tablename__ = 'favorito'
+class Likes(Base):
+    __tablename__ = 'likes'
     id = Column(Integer, primary_key=True)
-    vehicle_id = Column(Integer, ForeignKey('vehicle.id'), nullable=False)
-    planeta_id = Column(Integer, ForeignKey('planeta.id'), nullable=False)
-    personaje_id = Column(Integer, ForeignKey('personaje.id'), nullable=False)
+    like = Column(Integer)
+       
 
-class Vehicle(Base):
-    __tablename__= 'vehicle'
+class Media(Base):
+    __tablename__ = 'media'
     id = Column(Integer, primary_key=True)
-    name = Column(String(80), nullable=False)
-    color = Column(String(40), nullable=False)
-    marca = Column(String(50), nullable=False)
-    modelo = Column(String(50), nullable=False)
+    type = Column(String(250), nullable=False)
+    url = Column(String(250))
+    tag = Column(String(250))
+    likes_id = Column(Integer, ForeignKey('likes.id'))
+    likes = relationship(Likes)
 
-class Planeta(Base):
-    __tablename__ = 'planeta'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(80), nullable=False)
-    terrain = Column(Integer)
-    diameter = Column(Integer)
-    poblation = Column(Integer)
 
-class Personaje(Base):
-    __tablename__ = 'personaje'
+class Posts(Base):
+    __tablename__ = 'post'
     id = Column(Integer, primary_key=True)
-    name = Column(String(80), nullable=False)
-    dob = Column(DateTime())
-    gender = Column(String(20), nullable=False)
-    eye_color = Column(String(20), nullable=False)
+    text = Column(String(250), nullable=False)
+    media_id = Column(Integer, ForeignKey('media.id'))
+    media = relationship(Media) 
+      
+
+class Profiles(Base):
+    __tablename__ = 'profiles'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False)
+    username = Column(String(250), nullable=False)
+    biography = Column(String(250))
+    post_id = Column(Integer, ForeignKey('posts.id'))
+    post = relationship(Posts)
+    user_to_id = Column(Integer, ForeignKey('followers.id'))
+    follower = relationship(Followers)
+    user_from_id = Column(Integer, ForeignKey('followers.id'))
+    follower= relationship(Followers)
 
 
 ##class Address(Base):
